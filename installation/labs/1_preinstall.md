@@ -49,7 +49,7 @@ title CentOS Linux 7 (3.10.0-327.10.1.el7.x86_64)
         root (hd0)
         kernel /boot/vmlinuz-3.10.0-327.10.1.el7.x86_64 ro root=UUID=ef6ba050-6cdc-416a-9380-c14304d0d206 console=hvc0 LANG=en_US.UTF-8
         initrd /boot/initramfs-3.10.0-327.10.1.el7.x86_64.img
-# I included this
+
 transparent_hugepage=never
 
 [centos@ip-10-0-1-122 transparent_hugepage]$ sudo vi /etc/grub.conf
@@ -62,22 +62,89 @@ if test -f
 fi
 </code>
 
+5. List your network interface configuration
 
-
-<code>
-# Server
 [centos@ip-10-0-1-122 ~]$ ip address
-1: lo: LOOPBACK,UP,LOWER_UP mtu 65536 qdisc noqueue state UNKNOWN 
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN 
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
     inet6 ::1/128 scope host 
        valid_lft forever preferred_lft forever
-2: eth0: BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc pfifo_fast state UP qlen 1000
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc pfifo_fast state UP qlen 1000
     link/ether 0a:36:53:e7:fb:03 brd ff:ff:ff:ff:ff:ff
     inet 10.0.1.122/24 brd 10.0.1.255 scope global dynamic eth0
-       valid_lft 3215sec preferred_lft 3215sec
+       valid_lft 3494sec preferred_lft 3494sec
     inet6 fe80::836:53ff:fee7:fb03/64 scope link 
        valid_lft forever preferred_lft forever
+
+6. Show correct forward and reverse host lookups
+
+<code>
+
+[centos@ip-10-0-1-37 etc]$ getent hosts  ip-10-0-1-122.sa-east-1.compute.internal
+10.0.1.122      ip-10-0-1-122.sa-east-1.compute.internal
+
+[centos@ip-10-0-1-122 ~]$ nslookup ip-10-0-1-122.sa-east-1.compute.internal
+Server:         10.0.0.2
+Address:        10.0.0.2#53
+
+Non-authoritative answer:
+Name:   ip-10-0-1-122.sa-east-1.compute.internal
+Address: 10.0.1.122
       
+</code>
+
+6. Show the nscd service is running
+
+<code>
+[centos@ip-10-0-1-122 ~]$ sudo service nscd start
+Redirecting to /bin/systemctl start  nscd.service
+[centos@ip-10-0-1-122 ~]$ sudo service nscd status
+Redirecting to /bin/systemctl status  nscd.service
+● nscd.service - Name Service Cache Daemon
+   Loaded: loaded (/usr/lib/systemd/system/nscd.service; enabled; vendor preset: disabled)
+   Active: active (running) since Seg 2017-04-03 19:23:06 UTC; 4s ago
+  Process: 2382 ExecStart=/usr/sbin/nscd $NSCD_OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 2383 (nscd)
+   CGroup: /system.slice/nscd.service
+           └─2383 /usr/sbin/nscd
+
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 monito...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 monito...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 monito...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 monito...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 monito...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 monito...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 monito...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 disabl...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal nscd[2383]: 2383 stat f...
+Abr 03 19:23:06 ip-10-0-1-122.sa-east-1.compute.internal systemd[1]: Started Nam...
+Hint: Some lines were ellipsized, use -l to show in full.
+</code>
+
+7. Show the ntpd service is running
+
+<code>
+[centos@ip-10-0-1-122 ~]$ sudo service ntpd status
+Redirecting to /bin/systemctl status  ntpd.service
+● ntpd.service - Network Time Service
+   Loaded: loaded (/usr/lib/systemd/system/ntpd.service; enabled; vendor preset: disabled)
+   Active: active (running) since Seg 2017-04-03 19:15:22 UTC; 9s ago
+  Process: 2239 ExecStart=/usr/sbin/ntpd -u ntp:ntp $OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 2240 (ntpd)
+   CGroup: /system.slice/ntpd.service
+           └─2240 /usr/sbin/ntpd -u ntp:ntp -g
+
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listen norm...
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listen norm...
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listen norm...
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listen norm...
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listening o...
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal systemd[1]: Started Net...
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: 0.0.0.0 c01...
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: 0.0.0.0 c01...
+Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: 0.0.0.0 c01...
+Abr 03 19:15:29 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: 0.0.0.0 c61...
+Hint: Some lines were ellipsized, use -l to show in full.
 </code>
