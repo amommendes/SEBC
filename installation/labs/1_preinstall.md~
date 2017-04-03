@@ -1,0 +1,2 @@
+# Preinstall Reqs
+ 1. Check vm.swappiness on all your nodes
