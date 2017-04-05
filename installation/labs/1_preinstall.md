@@ -4,21 +4,27 @@
     
     <code>
     [centos@ip-10-0-1-122 vm]$ cat /proc/sys/vm/swappiness
+    
        30
+
     [centos@ip-10-0-1-122 etc]$ sudo sysctl -w vm.swappiness=1
-	vm.swappiness = 1
+	   
+     vm.swappiness = 1
+    
     [centos@ip-10-0-1-122 etc]$ cat /proc/sys/vm/swappiness 
+    
         1
     </code>
  
  2.Show the mount attributes of your volume(s)
   
   <code>
-	[centos@ip-10-0-1-122 etc]$ lsblk
-	NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-		xvda    202:0    0  40G  0 disk 
-		└─xvda1 202:1    0  40G  0 part /
-		xvdb    202:16   0  40G  0 disk
+    [root@ip-10-0-1-104 ~]# lsblk
+    NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+    xvda    202:0    0  40G  0 disk 
+    └─xvda1 202:1    0  40G  0 part /
+    xvdb    202:16   0  40G  0 disk 
+    └─xvdb1 202:17   0  40G  0 part /mnt/data1  
   </code>
   
   
@@ -26,66 +32,49 @@
 	
 	
 <code>
-	[centos@ip-10-0-1-122 data01]$ df -h
-		Filesystem      Size  Used Avail Use% Mounted on
-		/dev/xvda1       40G  940M   40G   3% /
-		devtmpfs        7,3G     0  7,3G   0% /dev
-		tmpfs           7,2G     0  7,2G   0% /dev/shm
-		tmpfs           7,2G   17M  7,2G   1% /run
-		tmpfs           7,2G     0  7,2G   0% /sys/fs/cgroup
-		tmpfs           1,5G     0  1,5G   0% /run/user/1000
-		tmpfs           1,5G     0  1,5G   0% /run/user/0
-	[centos@ip-10-0-1-122 data01]$ df /
-		Filesystem     1K-blocks   Used Available Use% Mounted on
-		/dev/xvda1      41926416 962236  40964180   3% /
+    [root@ip-10-0-1-104 ~]# df -h
+    Filesystem      Size  Used Avail Use% Mounted on
+    /dev/xvda1       40G  1.7G   39G   5% /
+    devtmpfs        7.3G     0  7.3G   0% /dev
+    tmpfs           7.2G     0  7.2G   0% /dev/shm
+    tmpfs           7.2G   17M  7.2G   1% /run
+    tmpfs           7.2G     0  7.2G   0% /sys/fs/cgroup
+    cm_processes    7.2G  636K  7.2G   1% /run/cloudera-scm-agent/process
+    tmpfs           1.5G     0  1.5G   0% /run/user/1000
+    /dev/xvdb1       40G   49M   38G   1% /mnt/data1
 </code>
 
-
-4. List your network interface configuration
-
+4. Disable transparent hugepage support
 
 <code>
-[centos@ip-10-0-1-122 transparent_hugepage]$ cat /sys/kernel/mm/transparent_hugepage/enabled 
+[root@ip-10-0-1-104 ~]# cat /sys/kernel/mm/transparent_hugepage/enabled 
 [always] madvise never
-[centos@ip-10-0-1-122 transparent_hugepage]$ sudo vi /etc/grub.conf
 
-default=0
-timeout=0
-title CentOS Linux 7 (3.10.0-327.10.1.el7.x86_64)
-        root (hd0)
-        kernel /boot/vmlinuz-3.10.0-327.10.1.el7.x86_64 ro root=UUID=ef6ba050-6cdc-416a-9380-c14304d0d206 console=hvc0 LANG=en_US.UTF-8
-        initrd /boot/initramfs-3.10.0-327.10.1.el7.x86_64.img
-
-transparent_hugepage=never
-
-[centos@ip-10-0-1-122 transparent_hugepage]$ sudo vi /etc/grub.conf
-
-touch /var/lock/subsys/local
-
-if test -f
-/sys/kernel/mm/transparent_hugepage/enabled; then
    echo never > /sys/kernel/mm/transparent_hugepage/enabled
-fi
+   echo never > /sys/kernel/mm/transparent_hugepage/defrag
+
+[root@ip-10-0-1-104 ~]# cat /sys/kernel/mm/transparent_hugepage/enabled 
+always madvise [never]
 </code>
+
 
 5. List your network interface configuration
 
 
 <code>
-[centos@ip-10-0-1-122 ~]$ ip address
-1: lo: LOOPBACK,UP,LOWER_UP mtu 65536 qdisc noqueue state UNKNOWN 
+[root@ip-10-0-1-104 ~]# ip address
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN 
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
     inet6 ::1/128 scope host 
        valid_lft forever preferred_lft forever
-2: eth0: BROADCAST,MULTICAST,UP,LOWER_UP mtu 9001 qdisc pfifo_fast state UP qlen 1000
-    link/ether 0a:36:53:e7:fb:03 brd ff:ff:ff:ff:ff:ff
-    inet 10.0.1.122/24 brd 10.0.1.255 scope global dynamic eth0
-       valid_lft 3494sec preferred_lft 3494sec
-    inet6 fe80::836:53ff:fee7:fb03/64 scope link 
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc pfifo_fast state UP qlen 1000
+    link/ether 0a:72:8d:d7:34:9f brd ff:ff:ff:ff:ff:ff
+    inet 10.0.1.104/24 brd 10.0.1.255 scope global dynamic eth0
+       valid_lft 2930sec preferred_lft 2930sec
+    inet6 fe80::872:8dff:fed7:349f/64 scope link 
        valid_lft forever preferred_lft forever
-
 </code>
 
 6. Show correct forward and reverse host lookups
@@ -102,22 +91,27 @@ Address:        10.0.0.2#53
 Non-authoritative answer:
 Name:   ip-10-0-1-122.sa-east-1.compute.internal
 Address: 10.0.1.122
+
 </code>
 
 7. Show the nscd service is running
 
 <code>
-[centos@ip-10-0-1-122 ~]$ sudo service nscd start
+[root@ip-10-0-1-104 ~]# sudo service nscd start
+
 Redirecting to /bin/systemctl start  nscd.service
-[centos@ip-10-0-1-122 ~]$ sudo service nscd status
+
+[root@ip-10-0-1-104 ~]# sudo service nscd status
+
 Redirecting to /bin/systemctl status  nscd.service
 ● nscd.service - Name Service Cache Daemon
-   Loaded: loaded (/usr/lib/systemd/system/nscd.service; enabled; vendor preset: disabled)
-   Active: active (running) since Seg 2017-04-03 19:23:06 UTC; 4s ago
-  Process: 2382 ExecStart=/usr/sbin/nscd $NSCD_OPTIONS (code=exited, status=0/SUCCESS)
- Main PID: 2383 (nscd)
+   Loaded: loaded (/usr/lib/systemd/system/nscd.service; disabled; vendor preset: disabled)
+   Active: active (running) since Wed 2017-04-05 02:18:32 UTC; 15s ago
+  Process: 19438 ExecStart=/usr/sbin/nscd $NSCD_OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 19439 (nscd)
    CGroup: /system.slice/nscd.service
-           └─2383 /usr/sbin/nscd
+           └─19439 /usr/sbin/nscd
+           
 </code>
 
 8. Show the ntpd service is running
@@ -133,15 +127,4 @@ Redirecting to /bin/systemctl status  ntpd.service
    CGroup: /system.slice/ntpd.service
            └─2240 /usr/sbin/ntpd -u ntp:ntp -g
 
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listen norm...
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listen norm...
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listen norm...
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listen norm...
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: Listening o...
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal systemd[1]: Started Net...
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: 0.0.0.0 c01...
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: 0.0.0.0 c01...
-Abr 03 19:15:22 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: 0.0.0.0 c01...
-Abr 03 19:15:29 ip-10-0-1-122.sa-east-1.compute.internal ntpd[2240]: 0.0.0.0 c61...
-Hint: Some lines were ellipsized, use -l to show in full.
 </code>
