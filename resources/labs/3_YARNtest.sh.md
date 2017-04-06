@@ -13,7 +13,7 @@ do
    for j in 2
    do
       # Container memory
-      for k in 512 1024
+      for k in 512 1024 6144
       do
          # Set mapper JVM heap
          MAP_MB=`echo "($k*0.8)/1" | bc`
@@ -37,7 +37,9 @@ do
                      -Dmapreduce.reduce.java.opts.max.heap=$RED_MB \
                      /results/tg-10GB-${i}-${j}-${k}  \
                      /results/ts-10GB-${i}-${j}-${k} 1>>tera_${i}_${j}_${k}.out 2>>tera_${i}_${j}_${k}.err
-        echo Running Mapper $i Reducer $j, with $k mb
+
+        echo Running $i Mapper(s) and $j Reducer(s), with $k mb
+
         sudo -u hdfs $HADOOP/hadoop fs -rm -r -skipTrash /results/tg-10GB-${i}-${j}-${k}
         sudo -u hdfs $HADOOP/hadoop fs -rm -r -skipTrash /results/ts-10GB-${i}-${j}-${k}
       done
