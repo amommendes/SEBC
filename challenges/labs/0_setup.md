@@ -149,8 +149,7 @@ merengues:x:1002:
 
  * Swappiness
 
- 	```
-
+```
  	[root@ip-10-0-1-203 cloudera]# cat /proc/sys/vm/swappiness
 
  			30
@@ -163,11 +162,11 @@ merengues:x:1002:
 	
  		1
 
- 	```
+```
 
  * Transparent Hugepage
 
-	```
+```
 	[root@ip-10-0-1-203 cloudera]#    echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
 	[root@ip-10-0-1-203 cloudera]#    echo never > /sys/kernel/mm/transparent_hugepage/defrag
@@ -180,11 +179,11 @@ merengues:x:1002:
 
 	always madvise [never]
 
- ```
+```
 
  * Mounting points
 
- 	``` 
+``` 
 
 	 	[root@ip-10-0-1-203 ~]# fdisk /dev/xvdb
 	
@@ -197,11 +196,11 @@ merengues:x:1002:
 		[root@ip-10-0-1-203 ~]# mount -o remount /mnt/data1/
 
 
- 	```
+```
 
  * NTP and NSCD installed and running
 
- ```
+```
 	
 	[root@ip-10-0-1-203 ~]# systemctl status nscd
 		● nscd.service - Name Service Cache Daemon
@@ -230,7 +229,7 @@ merengues:x:1002:
 		   CGroup: /system.slice/ntpd.service
 		           └─16615 /usr/sbin/ntpd -u ntp:ntp -g
 
- ```
+```
 
  * etc/hosts
 
