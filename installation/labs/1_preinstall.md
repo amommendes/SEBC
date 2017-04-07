@@ -48,12 +48,18 @@
 
 <code>
 [root@ip-10-0-1-104 ~]# cat /sys/kernel/mm/transparent_hugepage/enabled 
+
 [always] madvise never
 
    echo never > /sys/kernel/mm/transparent_hugepage/enabled
    echo never > /sys/kernel/mm/transparent_hugepage/defrag
 
 [root@ip-10-0-1-104 ~]# cat /sys/kernel/mm/transparent_hugepage/enabled 
+
+always madvise [never]
+
+[root@ip-10-0-1-104 ~]# cat /sys/kernel/mm/transparent_hugepage/enabled 
+
 always madvise [never]
 </code>
 
