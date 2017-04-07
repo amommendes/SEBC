@@ -242,6 +242,6 @@ merengues:x:1002:
 		10.0.1.197      ip-10.0.1.197.sa-east-1.compute.internal 
 		10.0.1.76       ip-10.0.1.76.sa-east-1.compute.internal  
 		10.0.1.243      ip-10.0.1.243.sa-east-1.compute.internal 
-		10.0.1.126      ip-10.0.1.1262.sa-east-1.compute.internal
+		10.0.1.126      ip-10.0.1.126.sa-east-1.compute.internal
 
 	```
