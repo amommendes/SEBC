@@ -25,67 +25,67 @@ I added the MariaDB and Cloudera-Manager Repo
 
 ``` 
 
-yum repolist enabled
-Loaded plugins: fastestmirror, security
-Loading mirror speeds from cached hostfile
- * base: ftpmirror.your.org
- * epel: mirror.steadfast.net
- * extras: lug.mtu.edu
- * updates: mirror.team-cymru.org
-cloudera-manager                                                                                                                                           |  951 B     00:00     
-cloudera-manager/primary                                                                                                                                   | 4.3 kB     00:00     
-cloudera-manager                                                                                                                                                              7/7
-repo id                                  repo name                                                     status
-base                                    CentOS-6 - Base                                                6,706
-centos-sclo-rh                          CentOS-6 - SCLo rh                                             4,955
-centos-sclo-sclo                        CentOS-6 - SCLo sclo                                           289
-cloudera-manager                        Cloudera Manager                                               7
-epel                                    Extra Packages for Enterprise Linux 6 - x86_64                 12,324
-extras                                  CentOS-6 - Extras                                              64
-google-cloud-compute                    Google Cloud Compute                                           4
-updates                                 CentOS-6 - Updates                                             252
-repolist: 24,601
+	yum repolist enabled
+	Loaded plugins: fastestmirror, security
+	Loading mirror speeds from cached hostfile
+	 * base: ftpmirror.your.org
+	 * epel: mirror.steadfast.net
+	 * extras: lug.mtu.edu
+	 * updates: mirror.team-cymru.org
+	cloudera-manager                                                                                                                                           |  951 B     00:00     
+	cloudera-manager/primary                                                                                                                                   | 4.3 kB     00:00     
+	cloudera-manager                                                                                                                                                              7/7
+	repo id                                  repo name                                                     status
+	base                                    CentOS-6 - Base                                                6,706
+	centos-sclo-rh                          CentOS-6 - SCLo rh                                             4,955
+	centos-sclo-sclo                        CentOS-6 - SCLo sclo                                           289
+	cloudera-manager                        Cloudera Manager                                               7
+	epel                                    Extra Packages for Enterprise Linux 6 - x86_64                 12,324
+	extras                                  CentOS-6 - Extras                                              64
+	google-cloud-compute                    Google Cloud Compute                                           4
+	updates                                 CentOS-6 - Updates                                             252
+	repolist: 24,601
 
 ```
 5. Creating users and groups:
 
 ```
 
-groupadd barca && groupadd merengues
+	groupadd barca && groupadd merengues
 
-getent group | grep "\(merengues\)\|\(barca\)"
+	getent group | grep "\(merengues\)\|\(barca\)"
 
-barca:x:502:
-merengues:x:503:
+	barca:x:502:
+	merengues:x:503:
 
-adduser neymar -gmerengues -u2010
-passwd neymar
+	adduser neymar -gmerengues -u2010
+	passwd neymar
 
-Changing password for user neymar.
-New password: neymar
-BAD PASSWORD: The password is shorter than 8 characters
-Retype new password: neymar 
-passwd: all authentication tokens updated successfully.
+	Changing password for user neymar.
+	New password: neymar
+	BAD PASSWORD: The password is shorter than 8 characters
+	Retype new password: neymar 
+	passwd: all authentication tokens updated successfully.
 
-adduser ronaldo -gbarca -u2016
+	adduser ronaldo -gbarca -u2016
 
-passwd ronaldo
-Changing password for user ronaldo.
-New password: ronaldo 
-BAD PASSWORD: The password is shorter than 8 characters
-Retype new password: ronaldo
-passwd: all authentication tokens updated successfully.
+	passwd ronaldo
+	Changing password for user ronaldo.
+	New password: ronaldo 
+	BAD PASSWORD: The password is shorter than 8 characters
+	Retype new password: ronaldo
+	passwd: all authentication tokens updated successfully.
 
 
-cat /etc/passwd | grep "\(neymar\)\|\(ronaldo\)"
+	cat /etc/passwd | grep "\(neymar\)\|\(ronaldo\)"
 
-neymar:x:2010:503::/home/neymar:/bin/bash
-ronaldo:x:2016:502::/home/ronaldo:/bin/bash
+	neymar:x:2010:503::/home/neymar:/bin/bash
+	ronaldo:x:2016:502::/home/ronaldo:/bin/bash
 
-getent group | grep "\(merengues\)\|\(barca\)"
+	getent group | grep "\(merengues\)\|\(barca\)"
 
-barca:x:502:
-merengues:x:503:
+	barca:x:502:
+	merengues:x:503:
 
 ```
 
