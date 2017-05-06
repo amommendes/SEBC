@@ -2,25 +2,22 @@
 
 1. Cloud Provider:
 
-### Amazon
+### Google Cloud Plataform
 
 2. IP address from instances:
 
 
 |       Name          |   IP Public    |  IP Private  |                DNS Private               |
 |---------------------|----------------|--------------|------------------------------------------|
-|Master               | 54.207.107.68  |  10.0.1.203  | ip-10-0-1-203.sa-east-1.compute.internal |
-|Utilities and Edge   | 54.233.136.235 |  10.0.1.197  | ip-10.0.1.197.sa-east-1.compute.internal |
-|Worker 1             | 54.233.100.71  |  10.0.1.76   | ip-10.0.1.76.sa-east-1.compute.internal  |
-|Worker 2             | 52.67.103.163  |  10.0.1.243  | ip-10.0.1.243.sa-east-1.compute.internal |
-|Worker 3             | 54.233.195.215 |  10.0.1.126  | ip-10.0.1.126.sa-east-1.compute.internal|
+|cloudera-1           | 104.197.117.191|  10.128.0.2  | cloudera-1.c.cloudera-165315.intenral    |
+|cloudera-2           | 104.154.231.76 |  10.128.0.3  | cloudera-2.c.cloudera-165315.intenral    |
+|cloudera-3           | 35.184.105.111 |  10.128.0.4  | cloudera-3.c.cloudera-165315.intenral    |
+|cloudera-4           | 104.154.133.151|  10.128.0.5  | cloudera-4.c.cloudera-165315.intenral    |
 
 
 3. OS Version
 
-CentOS Linux 7 x86_64 
-AMI: HVM EBS 1602-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-d7e1d2bd.3 (ami-26b93b4a)
-
+CentOS release 6.9 (Final)
 
 4. Listing Repos (Master Node)
 
@@ -28,119 +25,67 @@ I added the MariaDB and Cloudera-Manager Repo
 
 ``` 
 
-[root@ip-10-0-1-203 yum.repos.d]# yum repolist enabled
-Loaded plugins: fastestmirror
-
-cloudera-manager                                                                                                                                           |  951 B  00:00:00     
-mariadb                                                                                                                                                    | 2.9 kB  00:00:00     
-mariadb/primary_db                                                                                                                                         |  18 kB  00:00:00     
-cloudera-manager/primary                                                                                                                                   | 4.2 kB  00:00:00     
+yum repolist enabled
+Loaded plugins: fastestmirror, security
 Loading mirror speeds from cached hostfile
- * base: centos.xpg.com.br
- * extras: centos.xpg.com.br
- * updates: centos.xpg.com.br
-cloudera-manager                                                                                                                                                              8/8
-repo id                                                                              repo name                                                                              status
-base/7/x86_64                                                                        CentOS-7 - Base                                                                        9,363
-cloudera-manager                                                                     Cloudera Manager                                                                           8
-extras/7/x86_64                                                                      CentOS-7 - Extras                                                                        311
-mariadb                                                                              MariaDB                                                                                   15
-updates/7/x86_64                                                                     CentOS-7 - Updates                                                                     1,126
-repolist: 10,823
-
-
-```
-Here I will use a local Parcels repo in the Master Node, with SimpleHTTPSever from python.
-
-```
-
-[root@ip-10-0-1-203 cloudera]# pwd
-
-/home/centos/cloudera
-
-[root@ip-10-0-1-203 cloudera]# cd cdh
-
-[root@ip-10-0-1-203 cdh]# wget https://archive.cloudera.com/cdh5/parcels/5.10.1/
-
-CDH-5.10.1-1.cdh5.10.1.p0.10-el7.parcel
---2017-04-07 13:26:03--  https://archive.cloudera.com/cdh5/parcels/5.10.1/CDH-5.10.1-1.cdh5.10.1.p0.10-el7.parcel
-Resolving archive.cloudera.com (archive.cloudera.com)... 151.101.92.167
-Connecting to archive.cloudera.com (archive.cloudera.com)|151.101.92.167|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 1582619569 (1.5G)
-Saving to: ‘CDH-5.10.1-1.cdh5.10.1.p0.10-el7.parcel’
-
-100%[===================================================>] 1,582,619,569 42.4MB/s   in 41s    
-
-2017-04-07 13:26:45 (36.7 MB/s) - ‘CDH-5.10.1-1.cdh5.10.1.p0.10-el7.parcel’ saved [1582619569/1582619569]
-
-
-[root@ip-10-0-1-203 cdh]# wget https://archive.cloudera.com/cdh5/parcels/5.10.1/manifest.json
-
---2017-04-07 13:27:57--  https://archive.cloudera.com/cdh5/parcels/5.10.1/manifest.json
-
-Resolving archive.cloudera.com (archive.cloudera.com)... 151.101.92.167
-
-Connecting to archive.cloudera.com (archive.cloudera.com)|151.101.92.167|:443... connected.
-
-HTTP request sent, awaiting response... 200 OK
-Length: 65122 (64K) [application/json]
-Saving to: ‘manifest.json’
-
-100%[======================================================>] 65,122      --.-K/s   in 0.06s 
-
-2017-04-07 13:27:57 (1.10 MB/s) - ‘manifest.json’ saved [65122/65122]
-
-[root@ip-10-0-1-203 cdh]# python -m SimpleHTTPServer 80 &
-
-[1] 9390
-
-[root@ip-10-0-1-203 cloudera]# Serving HTTP on 0.0.0.0 port 80 ...
+ * base: ftpmirror.your.org
+ * epel: mirror.steadfast.net
+ * extras: lug.mtu.edu
+ * updates: mirror.team-cymru.org
+cloudera-manager                                                                                                                                           |  951 B     00:00     
+cloudera-manager/primary                                                                                                                                   | 4.3 kB     00:00     
+cloudera-manager                                                                                                                                                              7/7
+repo id                                  repo name                                                     status
+base                                    CentOS-6 - Base                                                6,706
+centos-sclo-rh                          CentOS-6 - SCLo rh                                             4,955
+centos-sclo-sclo                        CentOS-6 - SCLo sclo                                           289
+cloudera-manager                        Cloudera Manager                                               7
+epel                                    Extra Packages for Enterprise Linux 6 - x86_64                 12,324
+extras                                  CentOS-6 - Extras                                              64
+google-cloud-compute                    Google Cloud Compute                                           4
+updates                                 CentOS-6 - Updates                                             252
+repolist: 24,601
 
 ```
-
-
 5. Creating users and groups:
 
 ```
 
-[root@ip-10-0-1-203 cloudera]# groupadd barca && groupadd merengues
+groupadd barca && groupadd merengues
 
-[root@ip-10-0-1-203 cloudera]# getent group | grep "\(merengues\)\|\(barca\)"
+getent group | grep "\(merengues\)\|\(barca\)"
 
-barca:x:1001:
-merengues:x:1002:
+barca:x:502:
+merengues:x:503:
 
-[root@ip-10-0-1-203 cloudera]# adduser neymar -gmerengues -u2010
-[root@ip-10-0-1-203 cloudera]# passwd neymar
+adduser neymar -gmerengues -u2010
+passwd neymar
 
 Changing password for user neymar.
-New password: 
+New password: neymar
 BAD PASSWORD: The password is shorter than 8 characters
-Retype new password: 
+Retype new password: neymar 
 passwd: all authentication tokens updated successfully.
 
-[root@ip-10-0-1-203 cloudera]# adduser ronaldo -gbarca -u2016
+adduser ronaldo -gbarca -u2016
 
-[root@ip-10-0-1-203 cloudera]# passwd ronaldo
+passwd ronaldo
 Changing password for user ronaldo.
-New password: 
+New password: ronaldo 
 BAD PASSWORD: The password is shorter than 8 characters
-Retype new password: 
+Retype new password: ronaldo
 passwd: all authentication tokens updated successfully.
 
 
-[root@ip-10-0-1-203 cloudera]# cat /etc/passwd | grep "\(neymar\)\|\(ronaldo\)"
+cat /etc/passwd | grep "\(neymar\)\|\(ronaldo\)"
 
-neymar:x:2010:1002::/home/neymar:/bin/bash
-ronaldo:x:2016:1001::/home/ronaldo:/bin/bash
+neymar:x:2010:503::/home/neymar:/bin/bash
+ronaldo:x:2016:502::/home/ronaldo:/bin/bash
 
+getent group | grep "\(merengues\)\|\(barca\)"
 
-[root@ip-10-0-1-203 cloudera]# getent group | grep "\(merengues\)\|\(barca\)"
-
-barca:x:1001:
-merengues:x:1002:
-
+barca:x:502:
+merengues:x:503:
 
 ```
 
@@ -150,32 +95,20 @@ merengues:x:1002:
  * Swappiness
 
 ```
- 	[root@ip-10-0-1-203 cloudera]# cat /proc/sys/vm/swappiness
-
- 			30
-
-	[root@ip-10-0-1-203 cloudera]# sysctl -w vm.swappiness=1
-
-		vm.swappiness = 1
-	
-	[root@ip-10-0-1-203 cloudera]# cat /proc/sys/vm/swappiness
-	
- 		1
+cat /proc/sys/vm/swappiness
+ 			1
 
 ```
 
  * Transparent Hugepage
 
 ```
-	[root@ip-10-0-1-203 cloudera]#    echo never > /sys/kernel/mm/transparent_hugepage/enabled
-
-	[root@ip-10-0-1-203 cloudera]#    echo never > /sys/kernel/mm/transparent_hugepage/defrag
-
-	[root@ip-10-0-1-203 cloudera]# cat /sys/kernel/mm/transparent_hugepage/enabled 
+    
+    cat /sys/kernel/mm/transparent_hugepage/enabled 
 
 	always madvise [never]
 
-	[root@ip-10-0-1-203 cloudera]# cat /sys/kernel/mm/transparent_hugepage/defrag
+	cat /sys/kernel/mm/transparent_hugepage/defrag
 
 	always madvise [never]
 
@@ -185,87 +118,74 @@ merengues:x:1002:
 
 ``` 
 
-	 	[root@ip-10-0-1-203 ~]# fdisk /dev/xvdb
+	 	fdisk /dev/sdb
 	
-		[root@ip-10-0-1-203 ~]# mkfs.ext4 /dev/xvdb1
+		mkfs.ext4 /dev/sdb1
 	
-		[root@ip-10-0-1-203 ~]# mkdir /mnt/data1
+		mkdir /mnt/data1
 	
-		[root@ip-10-0-1-203 ~]# mount /dev/xvdb1 /mnt/data1/
+		mount /dev/sdb1 /mnt/data1/
 	
-		[root@ip-10-0-1-203 ~]# mount -o remount /mnt/data1/
-
+		mount -o remount /mnt/data1/
 
 ```
 
- * NTP and NSCD installed and running
-
-```
-	
-	[root@ip-10-0-1-203 ~]# systemctl status nscd
-		● nscd.service - Name Service Cache Daemon
-   		
-   		Loaded: loaded (/usr/lib/systemd/system/nscd.service; disabled; vendor preset: disabled)
-   		
-   		Active: active (running) since Fri 2017-04-07 14:20:18 UTC; 36s ago
-  
-  		Process: 16627 ExecStart=/usr/sbin/nscd $NSCD_OPTIONS (code=exited, status=0/SUCCESS)
- 		
- 		Main PID: 16628 (nscd)
-   
-   		CGroup: /system.slice/nscd.service
-        		   └─16628 /usr/sbin/nscd
-
-	[root@ip-10-0-1-203 ~]# systemctl status ntpd
-		● ntpd.service - Network Time Service
-   		
-   		Loaded: loaded (/usr/lib/systemd/system/ntpd.service; disabled; vendor preset: disabled)
-   
-   		Active: active (running) since Fri 2017-04-07 14:20:01 UTC; 55s ago
-  
-  		Process: 16614 ExecStart=/usr/sbin/ntpd -u ntp:ntp $OPTIONS (code=exited, status=0/SUCCESS)
-		
-		Main PID: 16615 (ntpd)
-		   CGroup: /system.slice/ntpd.service
-		           └─16615 /usr/sbin/ntpd -u ntp:ntp -g
+ * RPCBIND (used by NFSGateway) NTP and NSCD installed and running
 
 ```
 
- * etc/hosts
+	[root@cloudera-1 yum.repos.d]# service rpcbind status && service ntpd status && service nscd status
+	rpcbind (pid  2105) is running...
+	ntpd (pid  1566) is running...
+	nscd (pid 1774) is running...
 
+```
 
-	```
-
-		127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
-		::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-		10.0.1.203      ip-10-0-1-203.sa-east-1.compute.internal 
-		10.0.1.197      ip-10.0.1.197.sa-east-1.compute.internal 
-		10.0.1.76       ip-10.0.1.76.sa-east-1.compute.internal  
-		10.0.1.243      ip-10.0.1.243.sa-east-1.compute.internal 
-		10.0.1.126      ip-10.0.1.126.sa-east-1.compute.internal
-
-	```
  * SELinux
 
 ```
 
-	[root@ip-10-0-1-203 ~]#	vi /etc/selinux/config
+	perl -pi -e 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+	setenforce 0
+
+
+```
+ * Hostname
+ 	Added FQDN to HOSTNAME in each host
+
+```
 	
-	# This file controls the state of SELinux on the system.
-	# SELINUX= can take one of these three values:
-	#     enforcing - SELinux security policy is enforced.
-	#     permissive - SELinux prints warnings instead of enforcing.
-	#     disabled - No SELinux policy is loaded.
-	SELINUX=disabled
-	# SELINUXTYPE= can take one of three two values:
-	#     targeted - Targeted processes are protected,
-	#     minimum - Modification of targeted policy. Only selected processes are protected.
-	#     mls - Multi Level Security protection.
-	SELINUXTYPE=targeted
+	[root@cloudera-1 yum.repos.d]# cat /etc/sysconfig/network
+	NETWORKING=yes
+	HOSTNAME=cloudera-1.c.cloudera-165315.internal
+	[root@cloudera-1 yum.repos.d]# hostname $(hostname -f)
+	[root@cloudera-1 yum.repos.d]# hostname
+	cloudera-1.c.cloudera-165315.internal
 	
-	[root@ip-10-0-1-203 ~]# setenforce 0
+
+```
+
+ * Firewall and iptables
+
+```
+	
+	[root@cloudera-1 yum.repos.d]# service iptables status
+	iptables: Firewall is not running.
+``` 
+
+
+  * /etc/hosts
 
 
 ```
 
-  
+	[root@cloudera-1 ~]# cat /etc/hosts
+	127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+	::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+	10.128.0.2  cloudera-1.c.cloudera-165315.internal  cloudera-1
+	10.128.0.3  cloudera-2.c.cloudera-165315.internal  cloudera-2
+	10.128.0.4  cloudera-3.c.cloudera-165315.internal  cloudera-3
+	10.128.0.5  cloudera-4.c.cloudera-165315.internal  cloudera-4
+	169.254.169.254 metadata.google.internal  # Added by Google
+
+```
