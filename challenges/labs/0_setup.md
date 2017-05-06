@@ -1,4 +1,4 @@
-# Challenges - Services Enablement Boot Camp - São Paulo - April 4 - 7, 2017
+# Challenges - Services Enablement Boot Camp - São Paulo - May 6, 2017
 
 1. Cloud Provider:
 
