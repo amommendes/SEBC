@@ -35,5 +35,5 @@
 	
 	2017-04-07 18:07:22,047 INFO WebServerImpl:com.cloudera.server.cmf.WebServerImpl: Started Jetty server.
 
-	
+
 ```

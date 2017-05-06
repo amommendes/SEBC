@@ -4,12 +4,12 @@ Following the documentation [here](https://www.cloudera.com/documentation/enterp
 
 ```
 
+[root@cloudera-1 ~]# cat /etc/yum.repos.d/MariaDB.repo 
 # MariaDB 10.1 CentOS repository list - created 2016-01-23 14:16 UTC
 # http://mariadb.org/mariadb/repositories/
-
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+baseurl = http://yum.mariadb.org/10.1/centos6-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 
